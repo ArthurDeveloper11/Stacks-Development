@@ -12,7 +12,7 @@ app.post('/verificar', async (req, res) => {
     const { usuario, token } = req.body;
 
     // Verifica se o token enviado é igual ao esperado
-    if (token !== "DISCORDAPI_1HH2G3232132KJ") {
+    if (token !== "DISCORDAPI_HTTPDISCORDGETPEOPLE_hgTs2123hjassart") {
         return res.status(403).json({ status: "erro", mensagem: "Token inválido" });
     }
 
