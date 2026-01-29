@@ -7,11 +7,12 @@ app.use(express.json());
 const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers] });
 client.login(process.env.DISCORD_TOKEN); // token do bot como variável de ambiente
 
-// Endpoint protegido com token secreto
+// Endpoint protegido com token secreto fixo
 app.post('/verificar', async (req, res) => {
     const { usuario, token } = req.body;
 
-    if (token !== process.env.API_SECRET) {
+    // Verifica se o token enviado é igual ao esperado
+    if (token !== "DISCORDAPI_1HH2G3232132KJ") {
         return res.status(403).json({ status: "erro", mensagem: "Token inválido" });
     }
 
