@@ -1,33 +1,23 @@
-const express = require('express');
-const { Client, GatewayIntentBits } = require('discord.js');
+const express = require("express");
+const fetch = require("node-fetch");
+
 const app = express();
 app.use(express.json());
 
-// Inicializa o bot do Discord
-const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers] });
-client.login(process.env.DISCORD_TOKEN); // token do bot como variável de ambiente
+app.post("/api", async (req, res) => {
+  const universeId = req.body.universeId;
+  console.log("Recebi UniverseId:", universeId);
 
-// Endpoint protegido com token secreto fixo
-app.post('/verificar', async (req, res) => {
-    const { usuario, token } = req.body;
+  const url = `https://games.roblox.com/v1/games?universeIds=${universeId}`;
+  const response = await fetch(url);
+  const data = await response.json();
 
-    // Verifica se o token enviado é igual ao esperado
-    if (token !== "DISCORDAPI_HTTPDISCORDGETPEOPLE_hgTs2123hjassart") {
-        return res.status(403).json({ status: "erro", mensagem: "Token inválido" });
-    }
+  const latestVersion = data.data[0].rootPlaceVersion;
+  console.log("Última versão publicada:", latestVersion);
 
-    const guild = client.guilds.cache.get(process.env.GUILD_ID);
-    await guild.members.fetch();
-
-    const membro = guild.members.cache.find(m =>
-        m.user.tag === usuario || m.user.username === usuario
-    );
-
-    if (membro) {
-        res.json({ status: "ok", mensagem: "Usuário está no servidor" });
-    } else {
-        res.json({ status: "erro", mensagem: "Usuário não encontrado" });
-    }
+  res.json({ universeId, latestVersion });
 });
 
-app.listen(3000, () => console.log("Backend rodando na porta 3000"));
+app.listen(3000, () => {
+  console.log("Servidor rodando na porta 3000");
+});
