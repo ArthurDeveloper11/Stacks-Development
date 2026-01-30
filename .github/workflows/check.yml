@@ -1,0 +1,24 @@
+name: Check Roblox Version
+
+on:
+  workflow_dispatch: # permite rodar manualmente
+  schedule:
+    - cron: "0 * * * *" # roda a cada hora
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Run script
+        run: |
+          npm install node-fetch
+          node check_version.js
